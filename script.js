@@ -273,4 +273,17 @@ if (nav) {
     }, { passive: true });
 }
 
+// Mouse-tracking glow on cards
+document.addEventListener('mousemove', (e) => {
+    document.querySelectorAll('.card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const glow = card.querySelector('.card-glow');
+        if (glow) {
+            glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.04) 0%, transparent 50%)`;
+        }
+    });
+});
+
 fetchData();
