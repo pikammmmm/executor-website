@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Executors | SUNC Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+<div class="bg-grid"></div>
+
+<nav>
+    <div class="nav-inner">
+        <div class="nav-brand">
+            <a href="/executor-website/" class="nav-brand-link">
+                <div class="nav-logo">S</div>
+                <span>SUNC Tracker</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <a href="/executor-website/windows/" class="nav-link">Windows</a>
+            <a href="/executor-website/mac/" class="nav-link">Mac</a>
+            <a href="/executor-website/android/" class="nav-link">Android</a>
+            <a href="/executor-website/ios/" class="nav-link active-link">iOS</a>
+            <a href="https://weao.xyz" target="_blank" class="nav-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                WEAO
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="mobile-nav reveal">
+    <a href="/executor-website/" class="mobile-nav-item">All</a>
+    <a href="/executor-website/windows/" class="mobile-nav-item">Windows</a>
+    <a href="/executor-website/mac/" class="mobile-nav-item">Mac</a>
+    <a href="/executor-website/android/" class="mobile-nav-item">Android</a>
+    <a href="/executor-website/ios/" class="mobile-nav-item active">iOS</a>
+</div>
+
+<section class="hero reveal">
+    <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Live data
+        <span class="hero-badge-source">iOS</span>
+    </div>
+    <h1 class="hero-title">
+        <span class="hero-line reveal-child" style="--d:0">iOS</span>
+        <span class="hero-line hero-gradient reveal-child" style="--d:1">Executors.</span>
+    </h1>
+    <p class="hero-desc reveal-child" style="--d:2">All iOS executors for iPhone & iPad ranked by SUNC compliance.</p>
+    <div class="stats reveal-child" style="--d:3">
+        <div class="stat-item">
+            <div class="stat-num" id="total-count">&mdash;</div>
+            <div class="stat-label">Executors</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-num" id="updated-count">&mdash;</div>
+            <div class="stat-label">Updated</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-num" id="avg-sunc">&mdash;</div>
+            <div class="stat-label">Avg SUNC</div>
+        </div>
+    </div>
+</section>
+
+<div class="page-cards reveal">
+    <a href="/executor-website/windows/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.75L9 5.43V11.91L3 12M20 3v8.75l-8 .25V4.36L20 3M3 13l6-.08V19.56L3 18.25V13M12 12.92l8-.25V21l-8-1.36V12.92Z"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">Windows</div><div class="page-card-desc">Desktop executors for Windows</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/executor-website/mac/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.1 22C7.79 22.05 6.8 20.68 5.96 19.47C4.25 17 2.94 12.45 4.7 9.39C5.57 7.87 7.13 6.91 8.82 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5M13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">macOS</div><div class="page-card-desc">Executors for Mac</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/executor-website/android/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.61 15.15C16.15 15.15 15.77 14.78 15.77 14.32C15.77 13.86 16.15 13.5 16.61 13.5C17.07 13.5 17.45 13.86 17.45 14.32C17.45 14.78 17.07 15.15 16.61 15.15M7.41 15.15C6.95 15.15 6.57 14.78 6.57 14.32C6.57 13.86 6.95 13.5 7.41 13.5C7.87 13.5 8.24 13.86 8.24 14.32C8.24 14.78 7.87 15.15 7.41 15.15M16.91 10.14L18.58 7.26C18.67 7.09 18.61 6.88 18.45 6.79C18.28 6.69 18.07 6.76 17.97 6.93L16.29 9.83C14.95 9.22 13.5 8.88 12 8.88C10.5 8.88 9.05 9.22 7.71 9.83L6.03 6.93C5.93 6.76 5.72 6.69 5.55 6.79C5.39 6.88 5.32 7.09 5.42 7.26L7.09 10.14C4.47 11.55 2.75 14.12 2.5 17H21.5C21.25 14.12 19.53 11.55 16.91 10.14Z"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">Android</div><div class="page-card-desc">Mobile executors for Android</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/executor-website/ios/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 1H8.5C7.12 1 6 2.12 6 3.5V20.5C6 21.88 7.12 23 8.5 23H15.5C16.88 23 18 21.88 18 20.5V3.5C18 2.12 16.88 1 15.5 1M12 22C11.17 22 10.5 21.33 10.5 20.5C10.5 19.67 11.17 19 12 19C12.83 19 13.5 19.67 13.5 20.5C13.5 21.33 12.83 22 12 22M16 18H8V4H16V18Z"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">iOS</div><div class="page-card-desc">Executors for iPhone & iPad</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/executor-website/free/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">Free</div><div class="page-card-desc">All free executors</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <a href="/executor-website/paid/" class="page-card">
+        <div class="page-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div class="page-card-info"><div class="page-card-title">Paid</div><div class="page-card-desc">Premium executors</div></div>
+        <svg class="page-card-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+</div>
+
+<div class="toolbar reveal" id="grid-section">
+    <div class="toolbar-count">Showing <strong id="showing-count">0</strong> executors</div>
+    <select class="toolbar-sort" id="sort-select">
+        <option value="sunc-desc">SUNC: High to Low</option>
+        <option value="sunc-asc">SUNC: Low to High</option>
+        <option value="unc-desc">UNC: High to Low</option>
+        <option value="name-asc">Name: A to Z</option>
+        <option value="name-desc">Name: Z to A</option>
+    </select>
+</div>
+
+<div id="executors">
+    <div class="loading" id="loading">
+        <div class="loader"></div>
+        <div class="load-text">Loading iOS executors...</div>
+    </div>
+    <div class="grid" id="grid"></div>
+</div>
+
+<footer class="reveal">
+    <div class="footer-line"></div>
+    <p>Data from <a href="https://weao.xyz" target="_blank">weao.xyz</a> &middot; Not affiliated with WEAO or any executor</p>
+    <p class="made-by">made by pikammmmm</p>
+</footer>
+
+<script>window.PAGE_FILTER = 'iOS';</script>
+<script src="../script.js"></script>
+
+</body>
+</html>
