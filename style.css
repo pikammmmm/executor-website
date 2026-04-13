@@ -1310,3 +1310,211 @@ footer a:hover::after {
     background: rgba(255, 255, 255, 0.2);
     color: #fff;
 }
+
+/* === CARD SCROLL DIRECTIONS === */
+.card.slide-up {
+    transform: translateY(50px) scale(0.95);
+}
+.card.slide-left {
+    transform: translateX(-40px) translateY(20px) scale(0.95);
+}
+.card.slide-right {
+    transform: translateX(40px) translateY(20px) scale(0.95);
+}
+.card.slide-scale {
+    transform: scale(0.85) translateY(20px);
+}
+
+.card.slide-up.in-view,
+.card.slide-left.in-view,
+.card.slide-right.in-view,
+.card.slide-scale.in-view {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+}
+
+/* === HERO SHIMMER === */
+.hero-line {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    animation: shimmer 2.5s ease-in-out infinite;
+    animation-delay: inherit;
+}
+
+.hero-line.shimmer-done::after {
+    animation: shimmerOnce 3s ease-in-out forwards;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+@keyframes shimmerOnce {
+    0% { left: -100%; opacity: 1; }
+    70% { left: 200%; opacity: 1; }
+    100% { left: 200%; opacity: 0; }
+}
+
+/* === PAGE CARD 3D TILT === */
+.page-card {
+    transform-style: preserve-3d;
+    perspective: 800px;
+    will-change: transform;
+}
+
+.page-card:hover {
+    transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(-3px) scale(1.01);
+}
+
+/* === STAGGERED FEATURE PILLS === */
+.card.in-view .feat {
+    animation: featPop 0.4s var(--ease-spring) backwards;
+}
+
+.card.in-view .feat:nth-child(1) { animation-delay: 0.1s; }
+.card.in-view .feat:nth-child(2) { animation-delay: 0.15s; }
+.card.in-view .feat:nth-child(3) { animation-delay: 0.2s; }
+.card.in-view .feat:nth-child(4) { animation-delay: 0.25s; }
+.card.in-view .feat:nth-child(5) { animation-delay: 0.3s; }
+.card.in-view .feat:nth-child(6) { animation-delay: 0.35s; }
+.card.in-view .feat:nth-child(7) { animation-delay: 0.4s; }
+
+@keyframes featPop {
+    from {
+        opacity: 0;
+        transform: scale(0.7) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* === STAGGERED TAGS === */
+.card.in-view .tag {
+    animation: tagSlide 0.35s var(--ease-out) backwards;
+}
+
+.card.in-view .tag:nth-child(1) { animation-delay: 0.05s; }
+.card.in-view .tag:nth-child(2) { animation-delay: 0.1s; }
+.card.in-view .tag:nth-child(3) { animation-delay: 0.15s; }
+.card.in-view .tag:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes tagSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* === SCORE NUMBER COUNT-IN === */
+.card.in-view .score-num {
+    animation: scoreReveal 0.6s var(--ease-out) backwards;
+    animation-delay: 0.2s;
+}
+
+@keyframes scoreReveal {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.8);
+        filter: blur(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+/* === BUTTON SHINE === */
+.card-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    transition: left 0.6s var(--ease);
+}
+
+.card:hover .card-btn::after {
+    left: 200%;
+}
+
+/* === DETECTED SHAKE ON HOVER === */
+.card:hover .card-detected {
+    animation: detectShake 0.4s ease-in-out;
+}
+
+@keyframes detectShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-3px); }
+    40% { transform: translateX(3px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+}
+
+/* === AVATAR FLOAT === */
+.card.in-view .card-avatar {
+    animation: avatarFloat 0.6s var(--ease-spring) backwards;
+    animation-delay: 0.05s;
+}
+
+@keyframes avatarFloat {
+    from {
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* === STATUS LED ENTRANCE === */
+.card.in-view .status-led {
+    animation: ledEntrance 0.5s var(--ease-spring) backwards;
+    animation-delay: 0.4s;
+}
+
+@keyframes ledEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* === FOOTER LINE GROW === */
+.reveal.visible .footer-line {
+    animation: lineGrow 1s var(--ease-out) forwards;
+}
+
+@keyframes lineGrow {
+    from { width: 0; opacity: 0; }
+    to { width: 60px; opacity: 1; }
+}

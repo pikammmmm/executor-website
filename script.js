@@ -217,28 +217,32 @@ const revealObs = new IntersectionObserver((entries) => {
             revealObs.unobserve(e.target);
         }
     });
-}, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0, rootMargin: '0px 0px -60px 0px' });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-// Card scroll-in with stagger
+// Card scroll-in with stagger + random directions
 const cardObs = new IntersectionObserver((entries) => {
     const visible = entries.filter(e => e.isIntersecting);
     visible.forEach((e, i) => {
-        setTimeout(() => { e.target.classList.add('in-view'); }, i * 60);
-        cardObs.unobserve(e.target);
+        const card = e.target;
+        const directions = ['slide-up', 'slide-left', 'slide-right', 'slide-scale'];
+        const dir = directions[i % directions.length];
+        card.classList.add(dir);
+        setTimeout(() => {
+            card.classList.add('in-view');
+        }, i * 80);
+        cardObs.unobserve(card);
     });
-}, { threshold: 0, rootMargin: '0px 0px -20px 0px' });
+}, { threshold: 0, rootMargin: '0px 0px -30px 0px' });
 
 let isFirstRender = true;
 const origRender = render;
 render = function() {
     origRender();
     if (isFirstRender) {
-        // First load: animate cards in with stagger
         document.querySelectorAll('.card:not(.in-view)').forEach(c => cardObs.observe(c));
         isFirstRender = false;
     } else {
-        // Filter change: show cards immediately, no animation delay
         document.querySelectorAll('.card:not(.in-view)').forEach(c => c.classList.add('in-view'));
     }
 };
@@ -252,26 +256,73 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
 });
 
-// Parallax background orbs
+// Parallax background orbs + page cards + stats on scroll
 const orb1 = document.querySelector('.bg-orb-1');
 const orb2 = document.querySelector('.bg-orb-2');
 const orb3 = document.querySelector('.bg-orb-3');
-if (orb1) {
-    window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        orb1.style.transform = `translate(-50%, ${y * 0.15}px)`;
-        orb2.style.transform = `translate(50%, ${y * -0.1}px)`;
-        orb3.style.transform = `translate(-30%, ${y * 0.08}px)`;
-    }, { passive: true });
-}
 
-// Nav morph on scroll
-const nav = document.querySelector('nav');
-if (nav) {
-    window.addEventListener('scroll', () => {
-        nav.classList.toggle('scrolled', window.scrollY > 30);
-    }, { passive: true });
-}
+let ticking = false;
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        requestAnimationFrame(() => {
+            const y = window.scrollY;
+
+            // Orb parallax
+            if (orb1) {
+                orb1.style.transform = `translate(-50%, ${y * 0.2}px)`;
+                orb2.style.transform = `translate(50%, ${y * -0.12}px)`;
+                orb3.style.transform = `translate(-30%, ${y * 0.1}px)`;
+            }
+
+            // Nav morph
+            const nav = document.querySelector('nav');
+            if (nav) nav.classList.toggle('scrolled', y > 30);
+
+            // Parallax tilt on page cards
+            document.querySelectorAll('.page-card').forEach((card, i) => {
+                const rect = card.getBoundingClientRect();
+                const visible = rect.top < window.innerHeight && rect.bottom > 0;
+                if (visible) {
+                    const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                    const shift = (progress - 0.5) * 10;
+                    card.style.transform = `translateY(${shift * (i % 2 === 0 ? -1 : 1)}px)`;
+                }
+            });
+
+            // Parallax on stat items
+            document.querySelectorAll('.stat-item').forEach((stat, i) => {
+                const rect = stat.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    const progress = (window.innerHeight - rect.top) / window.innerHeight;
+                    stat.style.transform = `translateY(${(1 - progress) * 15}px)`;
+                    stat.style.opacity = Math.min(progress * 1.5, 1);
+                }
+            });
+
+            // Score bars re-trigger animation when visible
+            document.querySelectorAll('.score-bar-fill').forEach(bar => {
+                const rect = bar.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    bar.classList.add('bar-visible');
+                }
+            });
+
+            // Toolbar fade on scroll
+            const toolbar = document.querySelector('.toolbar');
+            if (toolbar) {
+                const rect = toolbar.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    const progress = Math.min((window.innerHeight - rect.top) / 200, 1);
+                    toolbar.style.opacity = progress;
+                    toolbar.style.transform = `translateY(${(1 - progress) * 20}px)`;
+                }
+            }
+
+            ticking = false;
+        });
+        ticking = true;
+    }
+}, { passive: true });
 
 // Mouse-tracking glow on cards
 document.addEventListener('mousemove', (e) => {
@@ -281,8 +332,40 @@ document.addEventListener('mousemove', (e) => {
         const y = e.clientY - rect.top;
         const glow = card.querySelector('.card-glow');
         if (glow) {
-            glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.04) 0%, transparent 50%)`;
+            glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.05) 0%, transparent 50%)`;
         }
+    });
+
+    // Subtle tilt on page cards based on mouse
+    document.querySelectorAll('.page-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / rect.width;
+        const dy = (e.clientY - cy) / rect.height;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 2) {
+            card.style.setProperty('--rx', (dy * -4).toFixed(2) + 'deg');
+            card.style.setProperty('--ry', (dx * 4).toFixed(2) + 'deg');
+        }
+    });
+});
+
+// Hero text shimmer on load
+window.addEventListener('load', () => {
+    document.querySelectorAll('.hero-line').forEach((line, i) => {
+        setTimeout(() => line.classList.add('shimmer-done'), 600 + i * 300);
+    });
+
+    // Stagger page cards entrance
+    document.querySelectorAll('.page-card').forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 400 + i * 100);
     });
 });
 
