@@ -133,7 +133,7 @@ async function fetchData() {
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('grid').innerHTML = '';
     try {
-        const r = await fetch(API_URL, { headers: { 'User-Agent': 'WEAO-3PService' } });
+        const r = await fetch(API_URL);
         if (!r.ok) throw new Error(r.status);
         allExecutors = await r.json();
         document.getElementById('loading').style.display = 'none';
