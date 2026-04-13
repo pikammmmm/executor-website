@@ -59,12 +59,33 @@ function buildCard(ex) {
     if (ex.multiInject) f.push('Multi-Inject');
     if (ex.clientmods) f.push('Client Mods');
     if (ex.raknet) f.push('RakNet');
+    if (ex.keysystem) f.push('Key System');
     if (f.length) feats = `<div class="card-features">${f.map(x => `<span class="feat">${x}</span>`).join('')}</div>`;
+
+    let badges = '';
+    const b = [];
+    if (ex.beta) b.push('<span class="tag tag-beta">Beta</span>');
+    if (ex.elementCertified) b.push('<span class="tag tag-certified">Certified</span>');
+    if (ex.hasIssues) b.push('<span class="tag tag-issues">Has Issues</span>');
+    if (b.length) badges = b.join('');
+
+    let desc = '';
+    const fullDesc = ex.slug?.fullDescription;
+    if (fullDesc && fullDesc !== 'No description currently available. Check back soon!') {
+        const short = fullDesc.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+        const truncated = short.length > 120 ? short.substring(0, 120) + '...' : short;
+        desc = `<div class="card-desc">${truncated}</div>`;
+    }
+
+    const owner = ex.slug?.owner;
+    let ownerHtml = '';
+    if (owner) ownerHtml = `<div class="card-owner">by ${owner}</div>`;
 
     let actions = '';
     const links = [];
     if (ex.websitelink) links.push(`<a href="${ex.websitelink}" target="_blank" class="card-btn">Website</a>`);
     if (ex.discordlink) links.push(`<a href="${ex.discordlink}" target="_blank" class="card-btn">Discord</a>`);
+    if (ex.purchaselink) links.push(`<a href="${ex.purchaselink}" target="_blank" class="card-btn card-btn-buy">Buy</a>`);
     if (links.length) actions = `<div class="card-actions">${links.join('')}</div>`;
 
     el.innerHTML = `
@@ -77,10 +98,13 @@ function buildCard(ex) {
                     <span class="tag ${ex.free ? 'tag-free' : 'tag-paid'}">${ex.free ? 'Free' : 'Paid'}</span>
                     <span class="tag tag-platform">${ex.platform || '?'}</span>
                     ${isExt(ex.extype) ? '<span class="tag tag-ext">External</span>' : ''}
+                    ${badges}
                 </div>
             </div>
         </div>
+        ${ownerHtml}
         ${detected}
+        ${desc}
         ${scores}
         ${feats}
         <div class="card-status">
