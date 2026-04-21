@@ -153,13 +153,28 @@ function animateCountUp(el, target, suffix) {
     requestAnimationFrame(tick);
 }
 
+async function tryFetch(url, options) {
+    const r = await fetch(url, options);
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+}
+
 async function fetchData() {
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('grid').innerHTML = '';
     try {
-        const r = await fetch(API_URL);
-        if (!r.ok) throw new Error(r.status);
-        allExecutors = await r.json();
+        let data;
+        try {
+            data = await tryFetch(API_URL);
+        } catch (e1) {
+            try {
+                data = await tryFetch('https://corsproxy.io/?' + encodeURIComponent(API_URL));
+            } catch (e2) {
+                data = await tryFetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(API_URL));
+            }
+        }
+
+        allExecutors = Array.isArray(data) ? data : [];
         document.getElementById('loading').style.display = 'none';
 
         // Stats based on filtered view for subpages
@@ -176,7 +191,7 @@ async function fetchData() {
 
         render();
     } catch (e) {
-        document.getElementById('loading').innerHTML = `<div class="error-box"><h3>Failed to connect</h3><p>Could not reach the WEAO API. Try a local server or check your connection.</p><button class="retry-btn" onclick="fetchData()">Retry</button></div>`;
+        document.getElementById('loading').innerHTML = `<div class="error-box"><h3>Failed to connect</h3><p>Could not reach the WEAO API. This may be a CORS or network issue.</p><button class="retry-btn" onclick="fetchData()">Retry</button></div>`;
     }
 }
 
