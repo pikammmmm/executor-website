@@ -18,6 +18,22 @@ function pctClr(p) {
 
 function isExt(t) { return t && t.includes('external'); }
 
+function imgFallbackHandler(letter) {
+    const safeLetter = String(letter).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return `(function(img){
+        if(!img.dataset.fallback){
+            img.dataset.fallback='1';
+            img.src='https://images.weserv.nl/?url='+encodeURIComponent(img.dataset.origSrc.replace(/^https?:\\/\\//,''));
+        } else if(img.dataset.fallback==='1'){
+            img.dataset.fallback='2';
+            img.src='https://corsproxy.io/?'+encodeURIComponent(img.dataset.origSrc);
+        } else {
+            img.onerror=null;
+            img.parentElement.textContent='${safeLetter}';
+        }
+    })(this)`;
+}
+
 function buildCard(ex) {
     const hasSunc = ex.suncPercentage != null;
     const hasUnc = ex.uncPercentage != null;
@@ -91,7 +107,7 @@ function buildCard(ex) {
     el.innerHTML = `
         <div class="card-glow"></div>
         <div class="card-top">
-            <div class="card-avatar">${logo ? `<img src="${logo}" alt="${ex.title}" onerror="this.parentElement.textContent='${ex.title[0]}'">` : ex.title[0]}</div>
+            <div class="card-avatar">${logo ? `<img src="${logo}" data-orig-src="${logo}" alt="${ex.title}" onerror="${imgFallbackHandler(ex.title[0])}">` : ex.title[0]}</div>
             <div class="card-info">
                 <div class="card-name">${ex.title}</div>
                 <div class="card-tags">
