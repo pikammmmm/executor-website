@@ -18,6 +18,20 @@ function pctClr(p) {
 
 function isExt(t) { return t && t.includes('external'); }
 
+// Always proxy logo images via images.weserv.nl. We can't attempt the direct
+// URL first because browsers log net::ERR_SSL_PROTOCOL_ERROR to the console
+// regardless of any onerror handler — the only way to keep the console clean
+// on affected machines is to never request the direct URL at all.
+function proxyLogoUrl(url) {
+    if (!url) return '';
+    return 'https://images.weserv.nl/?url=' + encodeURIComponent(url.replace(/^https?:\/\//, ''));
+}
+
+function imgFallbackHandler(letter) {
+    const safeLetter = String(letter).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    return `(function(img){img.onerror=null;img.parentElement.textContent='${safeLetter}';})(this)`;
+}
+
 function buildCard(ex) {
     const hasSunc = ex.suncPercentage != null;
     const hasUnc = ex.uncPercentage != null;
@@ -91,7 +105,7 @@ function buildCard(ex) {
     el.innerHTML = `
         <div class="card-glow"></div>
         <div class="card-top">
-            <div class="card-avatar">${logo ? `<img src="${logo}" alt="${ex.title}" onerror="this.parentElement.textContent='${ex.title[0]}'">` : ex.title[0]}</div>
+            <div class="card-avatar">${logo ? `<img src="${proxyLogoUrl(logo)}" alt="${ex.title}" onerror="${imgFallbackHandler(ex.title[0])}">` : ex.title[0]}</div>
             <div class="card-info">
                 <div class="card-name">${ex.title}</div>
                 <div class="card-tags">
@@ -164,9 +178,20 @@ async function fetchData() {
     document.getElementById('grid').innerHTML = '';
     try {
         let data;
-        try {
-            data = await tryFetch(API_URL);
-        } catch (e1) {
+        // If a previous visit on this machine failed the direct call, skip it
+        // to avoid logging the SSL error to the console again.
+        const skipDirect = (() => {
+            try { return localStorage.getItem('weao_skip_direct') === '1'; } catch (_) { return false; }
+        })();
+
+        if (!skipDirect) {
+            try {
+                data = await tryFetch(API_URL);
+            } catch (e1) {
+                try { localStorage.setItem('weao_skip_direct', '1'); } catch (_) {}
+            }
+        }
+        if (data == null) {
             try {
                 data = await tryFetch('https://corsproxy.io/?' + encodeURIComponent(API_URL));
             } catch (e2) {
