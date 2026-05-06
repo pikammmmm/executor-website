@@ -178,25 +178,15 @@ async function fetchData() {
     document.getElementById('grid').innerHTML = '';
     try {
         let data;
-        // If a previous visit on this machine failed the direct call, skip it
-        // to avoid logging the SSL error to the console again.
-        const skipDirect = (() => {
-            try { return localStorage.getItem('weao_skip_direct') === '1'; } catch (_) { return false; }
-        })();
-
-        if (!skipDirect) {
-            try {
-                data = await tryFetch(API_URL);
-            } catch (e1) {
-                try { localStorage.setItem('weao_skip_direct', '1'); } catch (_) {}
-            }
-        }
-        if (data == null) {
-            try {
-                data = await tryFetch('https://corsproxy.io/?' + encodeURIComponent(API_URL));
-            } catch (e2) {
-                data = await tryFetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(API_URL));
-            }
+        // Always go through a CORS proxy so we never trigger
+        // ERR_SSL_PROTOCOL_ERROR on networks that block weao.xyz directly.
+        // Browsers log network errors to the console regardless of try/catch,
+        // so the only way to keep the console clean is to not make the
+        // failing request at all.
+        try {
+            data = await tryFetch('https://corsproxy.io/?' + encodeURIComponent(API_URL));
+        } catch (e1) {
+            data = await tryFetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(API_URL));
         }
 
         allExecutors = Array.isArray(data) ? data : [];
